@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTILIZAÇÃO DO IVA CORRETO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --petrobras-green: #009846;
+            --petrobras-yellow: #ffd100;
+            --light-green: #4caf50;
+            --hover-green: #00833e;
+            --hover-yellow: #e6bc00;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(240,240,240,0.5) 100%);
+            animation: gradientShift 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #f5f5f5;
+        }
+
+        body.dark-mode::before {
+            background: linear-gradient(135deg, rgba(30,30,30,0.5) 0%, rgba(50,50,50,0.5) 100%);
+        }
+
+        .petrobras-green {
+            background-color: var(--petrobras-green);
+        }
+
+        .petrobras-yellow {
+            background-color: var(--petrobras-yellow);
+        }
+
+        .text-petrobras-green {
+            color: var(--petrobras-green);
+        }
+
+        .border-petrobras-green {
+            border-color: var(--petrobras-green);
+        }
+
+        .border-petrobras-yellow {
+            border-color: var(--petrobras-yellow);
+        }
+
+        .btn-primary {
+            background-color: var(--petrobras-green);
+            color: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 152, 70, 0.2), 0 0 0 rgba(0, 152, 70, 0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--hover-green);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 152, 70, 0.3), 0 0 10px rgba(0, 152, 70, 0.2);
+        }
+
+        .btn-primary:hover::after {
+            opacity: 1;
+            animation: btnGlow 2s infinite;
+        }
+
+        @keyframes btnGlow {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-secondary {
+            background-color: var(--petrobras-yellow);
+            color: #333;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--hover-yellow);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 209, 0, 0.3);
+        }
+
+        .btn-secondary:hover::after {
+            opacity: 1;
+            animation: btnGlow 2s infinite;
+        }
+
+        .card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        body.dark-mode .card {
+            background-color: #2d2d2d;
+            color: #f5f5f5;
+        }
+
+        body.dark-mode .card p {
+            color: #ddd;
+        }
+
+        .card:hover {
+            transform: translateY(-7px) scale(1.02);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 152, 70, 0.1);
+        }
+
+        .card:hover::after {
+            transform: translateX(100%);
+        }
+
+        .welcome-animation {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .option-animation {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .pulse-light {
+            animation: pulseLight 3s infinite;
+        }
+
+        @keyframes pulseLight {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 152, 70, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(0, 152, 70, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 152, 70, 0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background-color: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 152, 70, 0.1);
+        }
+
+        body.dark-mode .dropdown {
+            background-color: #2d2d2d;
+        }
+
+        .dropdown.show {
+            max-height: 1000px;
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(10px);
+        }
+
+        body.dark-mode .tooltip .tooltip-text {
+            background-color: #555;
+            color: #fff;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.dark-mode .welcome-message {
+            background-color: #2d2d2d;
+        }
+
+        body.dark-mode .welcome-message p {
+            color: #ddd;
+        }
+
+        /* Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(0, 152, 70, 0.1);
+            pointer-events: none;
+        }
+
+        body.dark-mode .particle {
+            background-color: rgba(255, 209, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles container -->
+    <div class="particles" id="particles"></div>
+
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="petrobras-green py-4 shadow-md relative overflow-hidden">
+            <div class="container mx-auto px-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.5L20 9v6l-8 4-8-4V9l8-4.5z"></path>
+                    </svg>
+                    <h1 class="text-white text-xl ml-2 font-bold">UTILIZAÇÃO DO IVA CORRETO</h1>
+                </div>
+                <button id="themeToggle" class="text-white p-2 rounded-full hover:bg-green-700 transition-colors">
+                    <svg id="moonIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sunIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Header light effect -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-white opacity-20"></div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <!-- Welcome Message -->
+            <div class="welcome-animation text-center mb-12 mt-8">
+                <div class="welcome-message inline-block p-6 rounded-lg bg-white shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-300 via-green-500 to-yellow-400"></div>
+                    <h2 class="text-2xl font-bold text-petrobras-green mb-4">Olá Diligenciador(a), espero que esteja tudo bem! 😊</h2>
+                    <p class="text-lg text-gray-700">Aqui posso te ajudar a verificar o código IVA para utilização do pedido.</p>
+                </div>
+            </div>
+
+            <!-- Main Selection Button -->
+            <div class="text-center mb-12">
+                <button id="mainButton" class="btn-primary text-xl font-bold py-4 px-8 rounded-full pulse-light">
+                    Selecione a utilização
+                </button>
+            </div>
+
+            <!-- Dropdown Options -->
+            <div id="utilizationDropdown" class="dropdown rounded-lg shadow-lg mx-auto max-w-2xl overflow-hidden">
+                <div class="p-4 petrobras-yellow relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-yellow-300 to-yellow-400 opacity-30"></div>
+                    <h3 class="text-xl font-bold text-center relative z-10">Selecione a Utilização</h3>
+                </div>
+                <div class="p-4">
+                    <button id="imobilizadoBtn" class="btn-primary w-full py-3 px-4 rounded-lg mb-4 flex items-center justify-center">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        Imobilizado
+                    </button>
+                    <button id="consumoBtn" class="btn-primary w-full py-3 px-4 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        Consumo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Imobilizado Options -->
+            <div id="imobilizadoOptions" class="dropdown rounded-lg shadow-lg mx-auto max-w-4xl mt-8">
+                <div class="p-4 petrobras-green relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-green-500 to-green-600 opacity-30"></div>
+                    <h3 class="text-xl font-bold text-white text-center relative z-10">Códigos IVA para Imobilizado</h3>
+                </div>
+                <div class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-green tooltip">
+                        <h4 class="font-bold text-lg">NB</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS</p>
+                        <div class="tooltip-text">Código NB: Utilizado para imobilizado com destaque apenas de ICMS</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-green tooltip">
+                        <h4 class="font-bold text-lg">N2</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS E IPI</p>
+                        <div class="tooltip-text">Código N2: Utilizado para imobilizado com destaque de ICMS e IPI</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-green tooltip">
+                        <h4 class="font-bold text-lg">VF</h4>
+                        <p class="text-gray-700">Destaque apenas de IPI</p>
+                        <div class="tooltip-text">Código VF: Utilizado para imobilizado com destaque apenas de IPI</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-green tooltip">
+                        <h4 class="font-bold text-lg">NO</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS E ST</p>
+                        <div class="tooltip-text">Código NO: Utilizado para imobilizado com destaque de ICMS e Substituição Tributária</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-green tooltip">
+                        <h4 class="font-bold text-lg">NN</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS + IPI + ST</p>
+                        <div class="tooltip-text">Código NN: Utilizado para imobilizado com destaque de ICMS, IPI e Substituição Tributária</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-green tooltip">
+                        <h4 class="font-bold text-lg">NA</h4>
+                        <p class="text-gray-700">NÃO DESTACA NENHUM IMPOSTO</p>
+                        <div class="tooltip-text">Código NA: Utilizado para imobilizado sem destaque de impostos</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-green tooltip">
+                        <h4 class="font-bold text-lg">V7</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS E ST</p>
+                        <div class="tooltip-text">Código V7: Utilizado para imobilizado com destaque de ICMS e Substituição Tributária</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-green tooltip">
+                        <h4 class="font-bold text-lg">VA</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS</p>
+                        <div class="tooltip-text">Código VA: Utilizado para imobilizado com destaque apenas de ICMS</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-green tooltip">
+                        <h4 class="font-bold text-lg">VE</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS + IPI + ST</p>
+                        <div class="tooltip-text">Código VE: Utilizado para imobilizado com destaque de ICMS, IPI e Substituição Tributária</div>
+                    </div>
+                </div>
+                <div class="p-4 text-center">
+                    <button id="backFromImobilizado" class="btn-secondary py-2 px-6 rounded-lg">Voltar</button>
+                </div>
+            </div>
+
+            <!-- Consumo Options -->
+            <div id="consumoOptions" class="dropdown rounded-lg shadow-lg mx-auto max-w-4xl mt-8">
+                <div class="p-4 petrobras-green relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-green-500 to-green-600 opacity-30"></div>
+                    <h3 class="text-xl font-bold text-white text-center relative z-10">Códigos IVA para Consumo</h3>
+                </div>
+                <div class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-yellow tooltip">
+                        <h4 class="font-bold text-lg">NU</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS</p>
+                        <div class="tooltip-text">Código NU: Utilizado para consumo com destaque apenas de ICMS</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-yellow tooltip">
+                        <h4 class="font-bold text-lg">NZ</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS E IPI</p>
+                        <div class="tooltip-text">Código NZ: Utilizado para consumo com destaque de ICMS e IPI</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-yellow tooltip">
+                        <h4 class="font-bold text-lg">NV</h4>
+                        <p class="text-gray-700">Destaque apenas de IPI</p>
+                        <div class="tooltip-text">Código NV: Utilizado para consumo com destaque apenas de IPI</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-yellow tooltip">
+                        <h4 class="font-bold text-lg">NR</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS E ST</p>
+                        <div class="tooltip-text">Código NR: Utilizado para consumo com destaque de ICMS e Substituição Tributária</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-yellow tooltip">
+                        <h4 class="font-bold text-lg">NE</h4>
+                        <p class="text-gray-700">Destaque apenas de ICMS + IPI + ST</p>
+                        <div class="tooltip-text">Código NE: Utilizado para consumo com destaque de ICMS, IPI e Substituição Tributária</div>
+                    </div>
+                    <div class="card p-4 rounded-lg shadow border-l-4 border-petrobras-yellow tooltip">
+                        <h4 class="font-bold text-lg">NT</h4>
+                        <p class="text-gray-700">NÃO DESTACA NENHUM IMPOSTO</p>
+                        <div class="tooltip-text">Código NT: Utilizado para consumo sem destaque de impostos</div>
+                    </div>
+                </div>
+                <div class="p-4 text-center">
+                    <button id="backFromConsumo" class="btn-secondary py-2 px-6 rounded-lg">Voltar</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="petrobras-green py-4 text-white text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-white opacity-20"></div>
+            <p>© 2025 UTILIZAÇÃO DO IVA CORRETO - Criação DRHB, D1QP.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const mainButton = document.getElementById('mainButton');
+            const utilizationDropdown = document.getElementById('utilizationDropdown');
+            const imobilizadoBtn = document.getElementById('imobilizadoBtn');
+            const consumoBtn = document.getElementById('consumoBtn');
+            const imobilizadoOptions = document.getElementById('imobilizadoOptions');
+            const consumoOptions = document.getElementById('consumoOptions');
+            const backFromImobilizado = document.getElementById('backFromImobilizado');
+            const backFromConsumo = document.getElementById('backFromConsumo');
+            const themeToggle = document.getElementById('themeToggle');
+            const moonIcon = document.getElementById('moonIcon');
+            const sunIcon = document.getElementById('sunIcon');
+            const particlesContainer = document.getElementById('particles');
+            
+            let isDarkMode = false;
+
+            // Initialize UI
+            utilizationDropdown.classList.remove('show');
+            imobilizadoOptions.classList.remove('show');
+            consumoOptions.classList.remove('show');
+
+            // Create particles
+            createParticles();
+
+            // Main button click
+            mainButton.addEventListener('click', function() {
+                utilizationDropdown.classList.toggle('show');
+                
+                // Add animation to the dropdown
+                if (utilizationDropdown.classList.contains('show')) {
+                    mainButton.classList.remove('pulse-light');
+                    
+                    // Animate the options
+                    setTimeout(() => {
+                        imobilizadoBtn.classList.add('option-animation');
+                        setTimeout(() => {
+                            consumoBtn.classList.add('option-animation');
+                        }, 200);
+                    }, 100);
+                } else {
+                    mainButton.classList.add('pulse-light');
+                    imobilizadoBtn.classList.remove('option-animation');
+                    consumoBtn.classList.remove('option-animation');
+                }
+            });
+
+            // Imobilizado button click
+            imobilizadoBtn.addEventListener('click', function() {
+                utilizationDropdown.classList.remove('show');
+                imobilizadoOptions.classList.add('show');
+                
+                // Add animation to cards
+                const cards = imobilizadoOptions.querySelectorAll('.card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('option-animation');
+                    }, index * 100);
+                });
+            });
+
+            // Consumo button click
+            consumoBtn.addEventListener('click', function() {
+                utilizationDropdown.classList.remove('show');
+                consumoOptions.classList.add('show');
+                
+                // Add animation to cards
+                const cards = consumoOptions.querySelectorAll('.card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('option-animation');
+                    }, index * 100);
+                });
+            });
+
+            // Back buttons
+            backFromImobilizado.addEventListener('click', function() {
+                imobilizadoOptions.classList.remove('show');
+                utilizationDropdown.classList.add('show');
+            });
+
+            backFromConsumo.addEventListener('click', function() {
+                consumoOptions.classList.remove('show');
+                utilizationDropdown.classList.add('show');
+            });
+
+            // Theme toggle
+            themeToggle.addEventListener('click', function() {
+                isDarkMode = !isDarkMode;
+                document.body.classList.toggle('dark-mode');
+                
+                if (isDarkMode) {
+                    moonIcon.classList.add('hidden');
+                    sunIcon.classList.remove('hidden');
+                    themeToggle.classList.add('bg-yellow-400');
+                    themeToggle.classList.remove('hover:bg-green-700');
+                    themeToggle.classList.add('hover:bg-yellow-500');
+                } else {
+                    moonIcon.classList.remove('hidden');
+                    sunIcon.classList.add('hidden');
+                    themeToggle.classList.remove('bg-yellow-400');
+                    themeToggle.classList.add('hover:bg-green-700');
+                    themeToggle.classList.remove('hover:bg-yellow-500');
+                }
+            });
+
+            // Card click effect
+            const allCards = document.querySelectorAll('.card');
+            allCards.forEach(card => {
+                card.addEventListener('click', function(event) {
+                    // Create a ripple effect
+                    const ripple = document.createElement('div');
+                    ripple.classList.add('absolute', 'bg-white', 'opacity-30', 'rounded-full');
+                    ripple.style.width = '100px';
+                    ripple.style.height = '100px';
+                    ripple.style.top = (event.clientY - card.getBoundingClientRect().top - 50) + 'px';
+                    ripple.style.left = (event.clientX - card.getBoundingClientRect().left - 50) + 'px';
+                    ripple.style.animation = 'ripple 0.8s linear';
+                    
+                    card.style.position = 'relative';
+                    card.style.overflow = 'hidden';
+                    card.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 800);
+                });
+            });
+
+            // Create particles function
+            function createParticles() {
+                const particleCount = 30;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // Random size between 2px and 6px
+                    const size = Math.random() * 4 + 2;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    // Random position
+                    const posX = Math.random() * 100;
+                    const posY = Math.random() * 100;
+                    particle.style.left = `${posX}%`;
+                    particle.style.top = `${posY}%`;
+                    
+                    // Random opacity
+                    particle.style.opacity = Math.random() * 0.5 + 0.1;
+                    
+                    // Animation
+                    const duration = Math.random() * 20 + 10;
+                    const delay = Math.random() * 5;
+                    
+                    particle.style.animation = `floatParticle ${duration}s ${delay}s infinite linear`;
+                    
+                    particlesContainer.appendChild(particle);
+                }
+                
+                // Add float animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes floatParticle {
+                        0% {
+                            transform: translate(0, 0);
+                        }
+                        25% {
+                            transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px);
+                        }
+                        50% {
+                            transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px);
+                        }
+                        75% {
+                            transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px);
+                        }
+                        100% {
+                            transform: translate(0, 0);
+                        }
+                    }
+                    
+                    @keyframes ripple {
+                        to {
+                            transform: scale(4);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Button hover effect for all buttons
+            const allButtons = document.querySelectorAll('button');
+            allButtons.forEach(button => {
+                button.addEventListener('mouseover', function() {
+                    button.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    button.style.transform = 'scale(1.05)';
+                });
+                
+                button.addEventListener('mouseout', function() {
+                    button.style.transform = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

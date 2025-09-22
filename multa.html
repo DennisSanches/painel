@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Multa 30%</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --petro-green: #004d40;
+            --petro-green-light: #00695c;
+            --petro-yellow: #ffd54f;
+            --petro-yellow-light: #ffecb3;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .petro-green {
+            background-color: var(--petro-green);
+        }
+        
+        .petro-green-light {
+            background-color: var(--petro-green-light);
+        }
+        
+        .petro-yellow {
+            background-color: var(--petro-yellow);
+        }
+        
+        .petro-yellow-light {
+            background-color: var(--petro-yellow-light);
+        }
+        
+        .text-petro-green {
+            color: var(--petro-green);
+        }
+        
+        .text-petro-yellow {
+            color: var(--petro-yellow);
+        }
+        
+        .border-petro-green {
+            border-color: var(--petro-green);
+        }
+        
+        .border-petro-yellow {
+            border-color: var(--petro-yellow);
+        }
+        
+        .step-container {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-out;
+        }
+        
+        .step-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .result-card {
+            transform: translateX(-100%);
+            opacity: 0;
+            transition: all 0.6s ease-out;
+        }
+        
+        .result-card.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .btn-hover {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 77, 64, 0.3);
+        }
+        
+        .btn-hover:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-hover::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn-hover:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 213, 79, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 213, 79, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 213, 79, 0);
+            }
+        }
+        
+        .dropdown-container {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .dropdown-menu.show {
+            max-height: 300px;
+        }
+        
+        .dropdown-item {
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--petro-yellow-light);
+            color: var(--petro-green);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--petro-green) 0%, var(--petro-green-light) 100%);
+        }
+        
+        .gradient-yellow {
+            background: linear-gradient(135deg, var(--petro-yellow) 0%, #ffb300 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .footer-gradient {
+            background: linear-gradient(to right, var(--petro-green-light), var(--petro-green));
+        }
+        
+        .logo-shadow {
+            filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.2));
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="gradient-bg text-white py-4 shadow-md">
+            <div class="container mx-auto px-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold flex items-center">
+                    <svg class="w-8 h-8 mr-2 logo-shadow" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"></path>
+                        <path d="M10 4a1 1 0 00-1 1v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 8.586V5a1 1 0 00-1-1z"></path>
+                    </svg>
+                    Cálculo de Multa 30%
+                </h1>
+                <button id="soundToggle" class="text-white p-2 rounded-full hover:bg-green-800 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="step-container active flex flex-col items-center justify-center text-center py-12">
+                <div class="mb-6 relative">
+                    <div class="absolute inset-0 bg-petro-yellow rounded-full opacity-20 transform scale-150 animate-pulse"></div>
+                    <svg class="w-24 h-24 mx-auto text-petro-green relative z-10" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-bold text-petro-green mb-4">Bem-vindo, Diligenciador!</h2>
+                <p class="text-lg text-gray-600 mb-8">Vamos calcular sua multa de 30% com precisão e agilidade.</p>
+                <button id="startButton" class="gradient-yellow text-petro-green font-bold py-4 px-8 rounded-lg shadow-lg btn-hover pulse-animation flex items-center">
+                    <span class="mr-2">Iniciar Cálculo</span>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Step 1: Currency Selection -->
+            <div id="step1" class="step-container hidden bg-white rounded-lg card-shadow p-6 mb-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-bold mr-3">1</div>
+                    <h3 class="text-xl font-bold text-petro-green">Escolher Moeda</h3>
+                </div>
+                <p class="text-gray-600 mb-6">Selecione a moeda para o cálculo:</p>
+                
+                <div class="dropdown-container w-full md:w-2/3 mx-auto mb-8">
+                    <button id="currencyDropdown" class="w-full flex items-center justify-between bg-white border-2 border-petro-green rounded-lg px-4 py-3 text-left focus:outline-none hover:border-petro-yellow transition-colors">
+                        <span id="selectedCurrency">R$ Real (BRL)</span>
+                        <svg class="w-5 h-5 text-petro-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="currencyMenu" class="dropdown-menu bg-white border-2 border-t-0 border-petro-green rounded-b-lg shadow-lg">
+                        <div class="dropdown-item px-4 py-3 cursor-pointer" data-symbol="R$" data-currency="Real (BRL)">R$ Real (BRL)</div>
+                        <div class="dropdown-item px-4 py-3 cursor-pointer" data-symbol="$" data-currency="Dólar (USD)">$ Dólar (USD)</div>
+                        <div class="dropdown-item px-4 py-3 cursor-pointer" data-symbol="€" data-currency="Euro (EUR)">€ Euro (EUR)</div>
+                        <div class="dropdown-item px-4 py-3 cursor-pointer" data-symbol="£" data-currency="Libra (GBP)">£ Libra (GBP)</div>
+                        <div class="dropdown-item px-4 py-3 cursor-pointer" data-symbol="¥" data-currency="Iene (JPY)">¥ Iene (JPY)</div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-8">
+                    <button id="backToWelcome" class="flex items-center text-petro-green font-medium py-2 px-4 rounded-lg hover:bg-petro-yellow-light transition-colors btn-hover">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Voltar
+                    </button>
+                    <button id="goToStep2" class="gradient-yellow text-petro-green font-bold py-3 px-6 rounded-lg shadow-md btn-hover flex items-center">
+                        <span class="mr-2">Próximo</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Base Value Input -->
+            <div id="step2" class="step-container hidden bg-white rounded-lg card-shadow p-6 mb-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-bold mr-3">2</div>
+                    <h3 class="text-xl font-bold text-petro-green">Inserir Valor Base</h3>
+                </div>
+                <p class="text-gray-600 mb-6">Digite o valor base para o cálculo:</p>
+                
+                <div class="w-full md:w-2/3 mx-auto mb-8">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <span id="currencySymbol" class="text-gray-500 text-lg">R$</span>
+                        </div>
+                        <input type="text" id="baseValue" class="w-full pl-10 pr-4 py-3 border-2 border-petro-green rounded-lg focus:outline-none focus:ring-2 focus:ring-petro-yellow text-lg transition-all" placeholder="Ex: 1000">
+                    </div>
+                    <p id="valueError" class="text-red-500 mt-2 hidden">Por favor, insira um valor numérico válido.</p>
+                </div>
+                
+                <div class="flex justify-between mt-8">
+                    <button id="backToStep1" class="flex items-center text-petro-green font-medium py-2 px-4 rounded-lg hover:bg-petro-yellow-light transition-colors btn-hover">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Voltar
+                    </button>
+                    <button id="goToStep3" class="gradient-yellow text-petro-green font-bold py-3 px-6 rounded-lg shadow-md btn-hover flex items-center">
+                        <span class="mr-2">Próximo</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Calculate Penalty -->
+            <div id="step3" class="step-container hidden bg-white rounded-lg card-shadow p-6 mb-6">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-bold mr-3">3</div>
+                    <h3 class="text-xl font-bold text-petro-green">Calcular Multa</h3>
+                </div>
+                
+                <div class="text-center py-6">
+                    <div class="bg-gray-50 rounded-lg p-4 mb-6 inline-block">
+                        <p class="text-gray-600 mb-2">Moeda selecionada: <span id="summarySymbol" class="font-medium text-petro-green">R$</span></p>
+                        <p class="text-gray-600">Valor base: <span id="summaryValue" class="font-medium text-petro-green">0,00</span></p>
+                    </div>
+                    
+                    <button id="calculateButton" class="gradient-yellow text-petro-green font-bold py-4 px-8 rounded-lg shadow-lg btn-hover pulse-animation mx-auto flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        Calcular Multa de 30%
+                    </button>
+                </div>
+                
+                <div class="flex justify-between mt-8">
+                    <button id="backToStep2" class="flex items-center text-petro-green font-medium py-2 px-4 rounded-lg hover:bg-petro-yellow-light transition-colors btn-hover">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="results" class="hidden">
+                <h3 class="text-2xl font-bold text-petro-green mb-8 text-center">Resultado do Cálculo</h3>
+                
+                <div class="max-w-md mx-auto">
+                    <!-- Penalty Value Card -->
+                    <div id="penaltyCard" class="result-card bg-white rounded-lg card-shadow overflow-hidden border-t-4 border-petro-green">
+                        <div class="gradient-bg text-white py-4 px-5">
+                            <h4 class="text-xl font-bold flex items-center">
+                                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                </svg>
+                                Valor da Multa (30%)
+                            </h4>
+                        </div>
+                        <div class="p-10 flex items-center justify-center bg-gradient-to-b from-white to-gray-50">
+                            <span class="text-5xl font-bold text-petro-green" id="penaltyValue">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-4 mt-10">
+                    <button id="recalculateButton" class="gradient-bg text-white font-bold py-3 px-6 rounded-lg shadow-md btn-hover flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Reiniciar Cálculo
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer-gradient text-white py-5 mt-auto">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="font-bold">2025 Cálculo de Multa 30%</span>
+                    </div>
+                    <div class="text-center md:text-right">
+                        <p class="font-medium">Criado por <span class="text-petro-yellow font-bold">Yuri Lima da Cruz e Dennis Sanches</span> - D1QP, DRHB</p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-green-600 flex justify-center">
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 bg-petro-green rounded-full"></div>
+                        <div class="w-3 h-3 bg-petro-yellow rounded-full"></div>
+                        <div class="w-3 h-3 bg-white rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            const results = document.getElementById('results');
+            
+            const startButton = document.getElementById('startButton');
+            const backToWelcome = document.getElementById('backToWelcome');
+            const goToStep2 = document.getElementById('goToStep2');
+            const backToStep1 = document.getElementById('backToStep1');
+            const goToStep3 = document.getElementById('goToStep3');
+            const backToStep2 = document.getElementById('backToStep2');
+            const calculateButton = document.getElementById('calculateButton');
+            const recalculateButton = document.getElementById('recalculateButton');
+            
+            const currencyDropdown = document.getElementById('currencyDropdown');
+            const currencyMenu = document.getElementById('currencyMenu');
+            const selectedCurrency = document.getElementById('selectedCurrency');
+            const currencySymbol = document.getElementById('currencySymbol');
+            const summarySymbol = document.getElementById('summarySymbol');
+            const summaryValue = document.getElementById('summaryValue');
+            
+            const baseValue = document.getElementById('baseValue');
+            const valueError = document.getElementById('valueError');
+            
+            const penaltyValue = document.getElementById('penaltyValue');
+            const penaltyCard = document.getElementById('penaltyCard');
+            
+            const soundToggle = document.getElementById('soundToggle');
+            
+            // State
+            let currentCurrencySymbol = 'R$';
+            let currentCurrency = 'Real (BRL)';
+            let isSoundOn = false;
+            
+            // Navigation Functions
+            function showScreen(screen) {
+                // Hide all screens
+                welcomeScreen.classList.remove('active');
+                welcomeScreen.classList.add('hidden');
+                step1.classList.remove('active');
+                step1.classList.add('hidden');
+                step2.classList.remove('active');
+                step2.classList.add('hidden');
+                step3.classList.remove('active');
+                step3.classList.add('hidden');
+                results.classList.add('hidden');
+                
+                // Show the requested screen
+                screen.classList.remove('hidden');
+                
+                // Add active class with a slight delay for animation
+                setTimeout(() => {
+                    screen.classList.add('active');
+                }, 50);
+            }
+            
+            // Add button click effect
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = '';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                });
+            });
+            
+            // Currency Dropdown
+            currencyDropdown.addEventListener('click', function() {
+                currencyMenu.classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!currencyDropdown.contains(event.target)) {
+                    currencyMenu.classList.remove('show');
+                }
+            });
+            
+            // Currency Selection
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    currentCurrencySymbol = this.dataset.symbol;
+                    currentCurrency = this.dataset.currency;
+                    selectedCurrency.textContent = `${currentCurrencySymbol} ${currentCurrency}`;
+                    currencySymbol.textContent = currentCurrencySymbol;
+                    summarySymbol.textContent = currentCurrencySymbol;
+                    currencyMenu.classList.remove('show');
+                });
+            });
+            
+            // Input Validation
+            baseValue.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9.,]/g, '');
+                valueError.classList.add('hidden');
+            });
+            
+            // Format number with commas and decimals
+            function formatNumber(number) {
+                return number.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+            
+            // Parse input value
+            function parseInputValue(value) {
+                if (!value) return 0;
+                // Replace commas with dots for calculation
+                return parseFloat(value.replace(/\./g, '').replace(',', '.'));
+            }
+            
+            // Calculate penalty
+            function calculatePenalty() {
+                const value = parseInputValue(baseValue.value);
+                if (isNaN(value)) {
+                    valueError.classList.remove('hidden');
+                    return false;
+                }
+                
+                const penalty = value * 0.3;
+                penaltyValue.textContent = `${currentCurrencySymbol} ${formatNumber(penalty)}`;
+                
+                return true;
+            }
+            
+            // Show results with animation
+            function showResults() {
+                results.classList.remove('hidden');
+                setTimeout(() => {
+                    penaltyCard.classList.add('show');
+                }, 100);
+            }
+            
+            // Reset results animation
+            function resetResultsAnimation() {
+                penaltyCard.classList.remove('show');
+            }
+            
+            // Event Listeners
+            startButton.addEventListener('click', function() {
+                showScreen(step1);
+            });
+            
+            backToWelcome.addEventListener('click', function() {
+                showScreen(welcomeScreen);
+            });
+            
+            goToStep2.addEventListener('click', function() {
+                showScreen(step2);
+            });
+            
+            backToStep1.addEventListener('click', function() {
+                showScreen(step1);
+            });
+            
+            goToStep3.addEventListener('click', function() {
+                if (baseValue.value.trim() === '') {
+                    valueError.classList.remove('hidden');
+                    return;
+                }
+                
+                summaryValue.textContent = `${currentCurrencySymbol} ${baseValue.value}`;
+                showScreen(step3);
+            });
+            
+            backToStep2.addEventListener('click', function() {
+                showScreen(step2);
+            });
+            
+            calculateButton.addEventListener('click', function() {
+                if (calculatePenalty()) {
+                    step3.classList.remove('active');
+                    step3.classList.add('hidden');
+                    resetResultsAnimation();
+                    showResults();
+                }
+            });
+            
+            recalculateButton.addEventListener('click', function() {
+                baseValue.value = '';
+                resetResultsAnimation();
+                showScreen(welcomeScreen);
+            });
+            
+            // Sound toggle (demo only - no actual sound)
+            soundToggle.addEventListener('click', function() {
+                isSoundOn = !isSoundOn;
+                
+                // Update icon
+                if (isSoundOn) {
+                    soundToggle.innerHTML = `
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                        </svg>
+                    `;
+                } else {
+                    soundToggle.innerHTML = `
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
+                        </svg>
+                    `;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
