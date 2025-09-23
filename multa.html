@@ -20,174 +20,51 @@
             color: #333;
         }
         
-        .petro-green {
-            background-color: var(--petro-green);
-        }
-        
-        .petro-green-light {
-            background-color: var(--petro-green-light);
-        }
-        
-        .petro-yellow {
-            background-color: var(--petro-yellow);
-        }
-        
-        .petro-yellow-light {
-            background-color: var(--petro-yellow-light);
-        }
-        
-        .text-petro-green {
-            color: var(--petro-green);
-        }
-        
-        .text-petro-yellow {
-            color: var(--petro-yellow);
-        }
-        
-        .border-petro-green {
-            border-color: var(--petro-green);
-        }
-        
-        .border-petro-yellow {
-            border-color: var(--petro-yellow);
-        }
-        
-        .step-container {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease-out;
-        }
-        
-        .step-container.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .result-card {
-            transform: translateX(-100%);
-            opacity: 0;
-            transition: all 0.6s ease-out;
-        }
-        
-        .result-card.show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        
-        .btn-hover {
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-hover:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0, 77, 64, 0.3);
-        }
-        
-        .btn-hover:active {
-            transform: translateY(-1px);
-        }
-        
-        .btn-hover::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-        
-        .btn-hover:focus:not(:active)::after {
-            animation: ripple 1s ease-out;
-        }
-        
+        .petro-green { background-color: var(--petro-green); }
+        .petro-green-light { background-color: var(--petro-green-light); }
+        .petro-yellow { background-color: var(--petro-yellow); }
+        .petro-yellow-light { background-color: var(--petro-yellow-light); }
+        .text-petro-green { color: var(--petro-green); }
+        .text-petro-yellow { color: var(--petro-yellow); }
+        .border-petro-green { border-color: var(--petro-green); }
+        .border-petro-yellow { border-color: var(--petro-yellow); }
+
+        .step-container { opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out; }
+        .step-container.active { opacity: 1; transform: translateY(0); }
+
+        .result-card { transform: translateX(-100%); opacity: 0; transition: all 0.6s ease-out; }
+        .result-card.show { transform: translateX(0); opacity: 1; }
+
+        .btn-hover { transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .btn-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 77, 64, 0.3); }
+        .btn-hover:active { transform: translateY(-1px); }
+        .btn-hover::after { content: ''; position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; background: rgba(255, 255, 255, 0.5); opacity: 0; border-radius: 100%; transform: scale(1, 1) translate(-50%); transform-origin: 50% 50%; }
+        .btn-hover:focus:not(:active)::after { animation: ripple 1s ease-out; }
+
         @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 0.5;
-            }
-            20% {
-                transform: scale(25, 25);
-                opacity: 0.3;
-            }
-            100% {
-                opacity: 0;
-                transform: scale(40, 40);
-            }
+            0% { transform: scale(0, 0); opacity: 0.5; }
+            20% { transform: scale(25, 25); opacity: 0.3; }
+            100% { opacity: 0; transform: scale(40, 40); }
         }
         
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-        
+        .pulse-animation { animation: pulse 2s infinite; }
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 213, 79, 0.7);
-            }
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(255, 213, 79, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 213, 79, 0);
-            }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 213, 79, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 213, 79, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 213, 79, 0); }
         }
         
-        .dropdown-container {
-            position: relative;
-        }
+        .dropdown-container { position: relative; }
+        .dropdown-menu { position: absolute; top: 100%; left: 0; width: 100%; z-index: 10; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .dropdown-menu.show { max-height: 300px; }
+        .dropdown-item { transition: all 0.2s ease; }
+        .dropdown-item:hover { background-color: var(--petro-yellow-light); color: var(--petro-green); }
         
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            z-index: 10;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        
-        .dropdown-menu.show {
-            max-height: 300px;
-        }
-        
-        .dropdown-item {
-            transition: all 0.2s ease;
-        }
-        
-        .dropdown-item:hover {
-            background-color: var(--petro-yellow-light);
-            color: var(--petro-green);
-        }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, var(--petro-green) 0%, var(--petro-green-light) 100%);
-        }
-        
-        .gradient-yellow {
-            background: linear-gradient(135deg, var(--petro-yellow) 0%, #ffb300 100%);
-        }
-        
-        .card-shadow {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        
-        .footer-gradient {
-            background: linear-gradient(to right, var(--petro-green-light), var(--petro-green));
-        }
-        
-        .logo-shadow {
-            filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.2));
-        }
+        .gradient-bg { background: linear-gradient(135deg, var(--petro-green) 0%, var(--petro-green-light) 100%); }
+        .gradient-yellow { background: linear-gradient(135deg, var(--petro-yellow) 0%, #ffb300 100%); }
+        .card-shadow { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .footer-gradient { background: linear-gradient(to right, var(--petro-green-light), var(--petro-green)); }
+        .logo-shadow { filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.2)); }
     </style>
 </head>
 <body>
@@ -368,6 +245,19 @@
             </div>
         </main>
 
+   <!-- Botão "Voltar para o Painel" acima do footer -->
+<div class="container mx-auto px-4 mt-6">
+  <a id="backPanelBtn" href="index.html"
+     class="inline-flex items-center bg-white/95 text-gray-700 font-medium py-3 px-6 rounded-lg border border-gray-200 shadow hover:bg-gray-100 transition-colors hidden"
+     aria-label="Voltar para o Painel">
+    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+    </svg>
+    Voltar para o Painel
+  </a>
+</div>
+
         <!-- Footer -->
         <footer class="footer-gradient text-white py-5 mt-auto">
             <div class="container mx-auto px-4">
@@ -393,7 +283,11 @@
         </footer>
     </div>
 
+    <!-- =============================================================== -->
+
     <script>
+document.getElementById('backPanelBtn').classList.toggle('hidden', screen === welcomeScreen);
+
         document.addEventListener('DOMContentLoaded', function() {
             // Elements
             const welcomeScreen = document.getElementById('welcomeScreen');
@@ -434,39 +328,23 @@
             // Navigation Functions
             function showScreen(screen) {
                 // Hide all screens
-                welcomeScreen.classList.remove('active');
-                welcomeScreen.classList.add('hidden');
-                step1.classList.remove('active');
-                step1.classList.add('hidden');
-                step2.classList.remove('active');
-                step2.classList.add('hidden');
-                step3.classList.remove('active');
-                step3.classList.add('hidden');
+                welcomeScreen.classList.remove('active'); welcomeScreen.classList.add('hidden');
+                step1.classList.remove('active'); step1.classList.add('hidden');
+                step2.classList.remove('active'); step2.classList.add('hidden');
+                step3.classList.remove('active'); step3.classList.add('hidden');
                 results.classList.add('hidden');
                 
                 // Show the requested screen
                 screen.classList.remove('hidden');
-                
-                // Add active class with a slight delay for animation
-                setTimeout(() => {
-                    screen.classList.add('active');
-                }, 50);
+                setTimeout(() => { screen.classList.add('active'); }, 50);
             }
             
             // Add button click effect
             const buttons = document.querySelectorAll('button');
             buttons.forEach(button => {
-                button.addEventListener('mousedown', function() {
-                    this.style.transform = 'scale(0.95)';
-                });
-                
-                button.addEventListener('mouseup', function() {
-                    this.style.transform = '';
-                });
-                
-                button.addEventListener('mouseleave', function() {
-                    this.style.transform = '';
-                });
+                button.addEventListener('mousedown', function() { this.style.transform = 'scale(0.95)'; });
+                button.addEventListener('mouseup', function() { this.style.transform = ''; });
+                button.addEventListener('mouseleave', function() { this.style.transform = ''; });
             });
             
             // Currency Dropdown
@@ -499,116 +377,57 @@
                 valueError.classList.add('hidden');
             });
             
-            // Format number with commas and decimals
             function formatNumber(number) {
-                return number.toLocaleString('pt-BR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
+                return number.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
-            
-            // Parse input value
             function parseInputValue(value) {
                 if (!value) return 0;
-                // Replace commas with dots for calculation
                 return parseFloat(value.replace(/\./g, '').replace(',', '.'));
             }
-            
-            // Calculate penalty
             function calculatePenalty() {
                 const value = parseInputValue(baseValue.value);
-                if (isNaN(value)) {
-                    valueError.classList.remove('hidden');
-                    return false;
-                }
-                
+                if (isNaN(value)) { valueError.classList.remove('hidden'); return false; }
                 const penalty = value * 0.3;
                 penaltyValue.textContent = `${currentCurrencySymbol} ${formatNumber(penalty)}`;
-                
                 return true;
             }
-            
-            // Show results with animation
             function showResults() {
                 results.classList.remove('hidden');
-                setTimeout(() => {
-                    penaltyCard.classList.add('show');
-                }, 100);
+                setTimeout(() => { penaltyCard.classList.add('show'); }, 100);
             }
-            
-            // Reset results animation
             function resetResultsAnimation() {
                 penaltyCard.classList.remove('show');
             }
             
             // Event Listeners
-            startButton.addEventListener('click', function() {
-                showScreen(step1);
-            });
-            
-            backToWelcome.addEventListener('click', function() {
-                showScreen(welcomeScreen);
-            });
-            
-            goToStep2.addEventListener('click', function() {
-                showScreen(step2);
-            });
-            
-            backToStep1.addEventListener('click', function() {
-                showScreen(step1);
-            });
-            
+            startButton.addEventListener('click', function() { showScreen(step1); });
+            backToWelcome.addEventListener('click', function() { showScreen(welcomeScreen); });
+            goToStep2.addEventListener('click', function() { showScreen(step2); });
+            backToStep1.addEventListener('click', function() { showScreen(step1); });
             goToStep3.addEventListener('click', function() {
-                if (baseValue.value.trim() === '') {
-                    valueError.classList.remove('hidden');
-                    return;
-                }
-                
+                if (baseValue.value.trim() === '') { valueError.classList.remove('hidden'); return; }
                 summaryValue.textContent = `${currentCurrencySymbol} ${baseValue.value}`;
                 showScreen(step3);
             });
-            
-            backToStep2.addEventListener('click', function() {
-                showScreen(step2);
-            });
-            
+            backToStep2.addEventListener('click', function() { showScreen(step2); });
             calculateButton.addEventListener('click', function() {
                 if (calculatePenalty()) {
-                    step3.classList.remove('active');
-                    step3.classList.add('hidden');
-                    resetResultsAnimation();
-                    showResults();
+                    step3.classList.remove('active'); step3.classList.add('hidden');
+                    resetResultsAnimation(); showResults();
                 }
             });
-            
             recalculateButton.addEventListener('click', function() {
-                baseValue.value = '';
-                resetResultsAnimation();
-                showScreen(welcomeScreen);
+                baseValue.value = ''; resetResultsAnimation(); showScreen(welcomeScreen);
             });
             
-            // Sound toggle (demo only - no actual sound)
+            // Sound toggle (demo only)
             soundToggle.addEventListener('click', function() {
                 isSoundOn = !isSoundOn;
-                
-                // Update icon
-                if (isSoundOn) {
-                    soundToggle.innerHTML = `
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
-                        </svg>
-                    `;
-                } else {
-                    soundToggle.innerHTML = `
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
-                        </svg>
-                    `;
-                }
+                soundToggle.innerHTML = isSoundOn
+                  ? `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>`
+                  : `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path></svg>`;
             });
         });
     </script>
 </body>
-
 </html>
