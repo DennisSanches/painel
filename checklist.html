@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Checklist de Cancelamento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --petro-green:#004d40;
+      --petro-green-light:#00695c;
+      --petro-yellow:#ffd54f;
+      --petro-yellow-strong:#ffb300;
+    }
+    body{font-family:'Montserrat',sans-serif; color:#0f172a; background:
+      radial-gradient(900px 600px at 0% -10%, rgba(0,105,92,.10), transparent 55%),
+      radial-gradient(900px 600px at 120% 10%, rgba(255,213,79,.12), transparent 55%),
+      linear-gradient(180deg,#f7fafc 0%,#f2f6f9 100%);
+    }
+    /* Cabeçalho e cards */
+    .gradient-bg{background:linear-gradient(135deg,var(--petro-green) 0%, var(--petro-green-light) 100%)}
+    .gradient-yellow{background:linear-gradient(135deg,var(--petro-yellow) 0%, var(--petro-yellow-strong) 100%)}
+    .card{
+      background:rgba(255,255,255,.98);
+      border:1px solid rgba(2,6,23,.08);
+      box-shadow:0 8px 18px rgba(0,0,0,.06);
+      border-radius:16px;
+      transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease, background-color .22s ease;
+    }
+    .card:hover{ transform:translateY(-2px); box-shadow:0 16px 28px rgba(0,0,0,.10) }
+    /* Hovers */
+    .hover-field{transition: box-shadow .2s ease, transform .2s ease}
+    .hover-field:hover{box-shadow:0 8px 22px rgba(0,0,0,.08); transform:translateY(-1px)}
+    .seg input{display:none}
+    .seg label{cursor:pointer; user-select:none}
+    .seg .opt{
+      border:2px solid #e5e7eb; border-radius:.75rem; transition:all .18s ease;
+      background:#fff;
+    }
+    .seg .opt:hover{ box-shadow:0 8px 18px rgba(0,0,0,.08); transform:translateY(-1px) }
+    .seg input:checked + .opt{border-color:transparent; color:#fff; transform:none; box-shadow:none}
+    .seg input[data-val="sim"]:checked + .opt{background:#16a34a}
+    .seg input[data-val="nao"]:checked + .opt{background:#dc2626}
+    /* Tabs e chip */
+    .pill{border:1px solid rgba(2,6,23,.08); background:rgba(255,255,255,.95); border-radius:9999px}
+    .toggle .tab{padding:.6rem 1rem; font-weight:700; border-radius:.75rem; transition:all .18s ease; color:#0f172a}
+    .toggle .tab:hover{box-shadow:0 8px 18px rgba(0,0,0,.08); transform:translateY(-1px)}
+    .toggle .tab.active{background:#fff; box-shadow:0 10px 24px rgba(0,0,0,.10); border:1px solid rgba(2,6,23,.08)}
+    /* Toast curto */
+    .toast{
+      position:fixed; right:16px; bottom:16px; background:#111827; color:#fff; padding:10px 14px;
+      border-radius:10px; box-shadow:0 10px 24px rgba(0,0,0,.12); opacity:0; transform:translateY(8px);
+      transition:all .25s ease; z-index:60; font-weight:600
+    }
+    .toast.show{opacity:1; transform:translateY(0)}
+    /* Acessibilidade */
+    :is(button,a,textarea){outline:none}
+    :is(button,a,textarea):focus-visible{box-shadow:0 0 0 3px rgba(255,213,79,.9),0 0 0 6px rgba(0,105,92,.55)}
+    /* Largura confortável para notebook */
+    .page-container{max-width:1200px}
+
+    /* ===== Feedback do botão Copiar ===== */
+    .btn-pulse{transition:transform .18s ease, box-shadow .18s ease, background-color .18s ease, color .18s ease}
+    .btn-pulse:active{transform:scale(0.98)}
+    .btn-copied{background:#22c55e !important; color:#fff !important; border-color:transparent !important}
+    .btn-icon{display:inline-flex; align-items:center}
+    .btn-icon svg{margin-right:.5rem}
+  </style>
+</head>
+<body>
+  <div class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="gradient-bg text-white py-4 shadow-md">
+      <div class="page-container mx-auto px-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold flex items-center">
+          <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"></path>
+            <path d="M10 4a1 1 0 00-1 1v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 8.586V5a1 1 0 00-1-1z"></path>
+          </svg>
+          Checklist de Cancelamento
+        </h1>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-grow page-container mx-auto px-4 py-8">
+      <!-- Seletor -->
+      <div class="card p-4 mb-6 hover-field">
+        <div class="flex flex-wrap items-center gap-3 justify-between">
+          <div class="toggle flex gap-2">
+            <button id="btnSemOnus" class="tab active" type="button" aria-pressed="true">
+              Sem Ônus
+            </button>
+            <button id="btnComOnus" class="tab" type="button" aria-pressed="false">
+              Com Ônus
+            </button>
+          </div>
+          <div id="chipTipo" class="pill px-3 py-1.5 text-sm font-semibold text-gray-700">
+            Tipo selecionado: <span class="text-yellow-700">Sem Ônus</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seções -->
+      <div class="grid grid-cols-1 gap-6">
+        <!-- SEM ÔNUS -->
+        <section id="secSem" class="card p-6">
+          <div class="flex items-center mb-4">
+            <div class="w-10 h-10 rounded-full gradient-bg text-white font-bold flex items-center justify-center mr-3">A</div>
+            <h2 class="text-xl font-bold text-[color:var(--petro-green)]">PARA CANCELAMENTO <span class="text-yellow-600">SEM ÔNUS</span></h2>
+          </div>
+
+          <div class="group hover-field rounded-xl p-2 -m-2 mb-4">
+            <label class="block text-sm text-gray-600 mb-1">Número do(s) pedido(s) e item(ns) a ser(em) cancelado(s)</label>
+            <textarea id="sem-numero"
+              class="w-full rounded-lg border-2 border-gray-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-300 p-3"
+              rows="2" placeholder="Ex.: 4500XXXX (Item 10), 4500YYYY (Item 20)"></textarea>
+          </div>
+
+          <div class="group hover-field rounded-xl p-2 -m-2 mb-6">
+            <label class="block text-sm text-gray-600 mb-1">Motivo(s)</label>
+            <textarea id="sem-motivo"
+              class="w-full rounded-lg border-2 border-gray-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-300 p-3"
+              rows="3" placeholder="Descreva objetivamente o(s) motivo(s)"></textarea>
+          </div>
+
+          <h3 class="font-semibold text-gray-800 mb-3">Checklist (responder Sim ou Não):</h3>
+          <div id="sem-questions" class="space-y-4"></div>
+        </section>
+
+        <!-- COM ÔNUS -->
+        <section id="secCom" class="card p-6 hidden">
+          <div class="flex items-center mb-4">
+            <div class="w-10 h-10 rounded-full gradient-bg text-white font-bold flex items-center justify-center mr-3">B</div>
+            <h2 class="text-xl font-bold text-[color:var(--petro-green)]">PARA CANCELAMENTO <span class="text-red-600">COM ÔNUS</span></h2>
+          </div>
+
+          <div class="group hover-field rounded-xl p-2 -m-2 mb-4">
+            <label class="block text-sm text-gray-600 mb-1">Número do(s) pedido(s) e item(ns) a ser(em) cancelado(s)</label>
+            <textarea id="com-numero"
+              class="w-full rounded-lg border-2 border-gray-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-300 p-3"
+              rows="2" placeholder="Ex.: 4500ZZZZ (Item 30)"></textarea>
+          </div>
+
+          <div class="group hover-field rounded-xl p-2 -m-2 mb-6">
+            <label class="block text-sm text-gray-600 mb-1">Motivo(s)</label>
+            <textarea id="com-motivo"
+              class="w-full rounded-lg border-2 border-gray-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-300 p-3"
+              rows="3" placeholder="Descreva objetivamente o(s) motivo(s)"></textarea>
+          </div>
+
+          <h3 class="font-semibold text-gray-800 mb-3">Checklist (responder Sim ou Não):</h3>
+          <div id="com-questions" class="space-y-4"></div>
+        </section>
+      </div>
+
+      <!-- Ações -->
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button id="copyActive" class="btn-pulse hover-field gradient-yellow text-[color:var(--petro-green)] font-bold py-3 px-6 rounded-lg shadow inline-flex items-center btn-icon">
+          <!-- ícone padrão copiar -->
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="label">Copiar (Sem Ônus)</span>
+        </button>
+
+        <button id="clearActive" class="btn-pulse hover-field bg-white text-gray-700 font-medium py-3 px-6 rounded-lg border border-gray-200 shadow hover:bg-gray-100">
+          Limpar (Sem Ônus)
+        </button>
+      </div>
+
+      <!-- Voltar ao painel -->
+      <div class="mt-6">
+        <a href="index.html"
+           class="hover-field inline-flex items-center bg-white/95 text-gray-700 font-medium py-3 px-6 rounded-lg border border-gray-200 shadow hover:bg-gray-100 transition-colors"
+           aria-label="Voltar para o Painel">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Voltar para o Painel
+        </a>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="gradient-bg text-white py-5 mt-auto">
+      <div class="page-container mx-auto px-4 text-center">
+        <p class="font-medium">© 2025 Checklist de Cancelamento — Desenvolvido por <span class="font-bold" style="color:var(--petro-yellow)">DRHB</span></p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">Conteúdo copiado.</div>
+
+  <script>
+    // Perguntas
+    const SEM_ONUS_QUESTIONS = [
+      "O pedido foi enviado ao fornecedor?",
+      "O pedido está em exceção 20 e a solicitação é por este motivo?",
+      "Consultou o Comprar Bem ou transação MD04 para confirmar?",
+      "Existe e-mail de anuência do fornecedor para cancelamento em comum acordo?",
+      "O pedido está no prazo?",
+      "O pedido foi rejeitado dentro do prazo pelo fornecedor?",
+      "O fornecedor apresentou carta oficial de descontinuidade (papel timbrado, assinatura do responsável etc.) do material?",
+      "Há pendências da Petrobras que justifiquem o cancelamento sem ônus?",
+      "Para itens críticos: o ECPN/demandante confirmou que o material não é mais necessário?",
+      "Para itens críticos: há algum impeditivo informado por parte da Maristela (itens P-78 ou outras paradas/demandas)?",
+      "O fornecedor informou (via relatório consolidado, sala de colaboração ou contrato) que não atingiu faturamento mínimo?",
+      "Anexou o histórico de tratativas na FI?"
+    ];
+    const COM_ONUS_QUESTIONS = [
+      "O pedido foi enviado ao fornecedor?",
+      "O pedido está em atraso por responsabilidade do fornecedor?",
+      "O fornecedor cotou o material como idêntico “SIM”, mas se nega a entregar?",
+      "O pedido foi rejeitado fora do prazo e já está vencido?",
+      "Foi enviado aviso de rescisão contratual ao fornecedor (notificação gcd-3 ou eDilig)?",
+      "Caso o pedido esteja no prazo e o cancelamento seja por motivo do fornecedor (declínio etc.), foi formalizado expressamente que o cancelamento será com ônus, multa de 30% sobre o saldo líquido do item e pontuação negativa no IDF?",
+      "O fornecedor respondeu ao aviso de cancelamento dentro do prazo de 7 dias úteis ou após o prazo?",
+      "Caso o fornecedor tenha respondido o aviso, a divergência apontada é de responsabilidade da Petrobras?",
+      "Para itens críticos: o ECPN/demandante confirmou que o material não é mais necessário?",
+      "Para itens críticos: há algum impeditivo informado por parte da Maristela (itens P-78 ou outras paradas/demandas)?",
+      "O pedido é INEX (inexigibilidade)?",
+      "Verificou se o fornecedor possui outras pendências com a Petrobras?",
+      "Anexou o histórico de tratativas na FI?"
+    ];
+
+    // Render
+    function createQuestionBlock(container, sectionKey, qText, idx){
+      const name = `${sectionKey}-q${idx}`;
+      const wrap = document.createElement('div');
+      wrap.className = "seg hover-field rounded-xl p-3 bg-white";
+      wrap.innerHTML = `
+        <p class="mb-2 text-sm text-gray-700">${qText}</p>
+        <div class="flex gap-2">
+          <label class="flex-1">
+            <input type="radio" name="${name}" value="Sim" data-val="sim">
+            <div class="opt w-full py-2.5 text-center font-semibold">Sim</div>
+          </label>
+          <label class="flex-1">
+            <input type="radio" name="${name}" value="Não" data-val="nao">
+            <div class="opt w-full py-2.5 text-center font-semibold">Não</div>
+          </label>
+        </div>
+      `;
+      container.appendChild(wrap);
+    }
+
+    function renderQuestions(){
+      const sem = document.getElementById('sem-questions');
+      const com = document.getElementById('com-questions');
+      SEM_ONUS_QUESTIONS.forEach((q,i)=> createQuestionBlock(sem, 'sem', q, i+1));
+      COM_ONUS_QUESTIONS.forEach((q,i)=> createQuestionBlock(com, 'com', q, i+1));
+    }
+
+    function getAnswer(name){
+      const sel = document.querySelector(`input[name="${name}"]:checked`);
+      return sel ? sel.value : "—";
+    }
+
+    function buildSectionText(title, numeroId, motivoId, questions, sectionKey){
+      const numeros = (document.getElementById(numeroId).value || "").trim() || "—";
+      const motivos = (document.getElementById(motivoId).value || "").trim() || "—";
+      let out = `${title}\n`;
+      out += `Número do(s) pedido(s) e item(ns): ${numeros}\n`;
+      out += `Motivo(s): ${motivos}\n`;
+      out += `Checklist:\n`;
+      questions.forEach((q, i)=>{
+        const ans = getAnswer(`${sectionKey}-q${i+1}`);
+        out += `- ${q} ${ans}\n`;
+      });
+      return out + "\n";
+    }
+
+    function showToast(msg="Conteúdo copiado."){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(()=> t.classList.remove('show'), 1400);
+    }
+
+    // ===== Feedback visual no botão Copiar =====
+    const COPY_ICON = `
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>`;
+    const CHECK_ICON = `
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`;
+
+    function copyLabel(active){
+      return `Copiar (${active === 'sem' ? 'Sem Ônus' : 'Com Ônus'})`;
+    }
+
+    function animateCopyButton(btn, active){
+      btn.classList.add('btn-copied');
+      btn.innerHTML = `${CHECK_ICON}<span class="label">Copiado!</span>`;
+      btn.disabled = true;
+      setTimeout(()=>{
+        btn.classList.remove('btn-copied');
+        btn.disabled = false;
+        btn.innerHTML = `${COPY_ICON}<span class="label">${copyLabel(ACTIVE)}</span>`;
+      }, 1200);
+    }
+
+    // Copiar e limpar
+    function copyActiveSection(active){
+      let resumo = "";
+      if(active === 'sem'){
+        resumo = buildSectionText("PARA CANCELAMENTO SEM ÔNUS","sem-numero","sem-motivo",SEM_ONUS_QUESTIONS,"sem");
+      }else{
+        resumo = buildSectionText("PARA CANCELAMENTO COM ÔNUS","com-numero","com-motivo",COM_ONUS_QUESTIONS,"com");
+      }
+      const btn = document.getElementById('copyActive');
+
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(resumo)
+          .then(()=>{ showToast("Conteúdo copiado."); animateCopyButton(btn, ACTIVE); })
+          .catch(()=> showToast("Não foi possível copiar."));
+      }else{
+        const ta = document.createElement('textarea');
+        ta.value = resumo; document.body.appendChild(ta);
+        ta.select(); ta.setSelectionRange(0, resumo.length);
+        try{ document.execCommand('copy'); showToast("Conteúdo copiado."); animateCopyButton(btn, ACTIVE); }catch(e){}
+        document.body.removeChild(ta);
+      }
+    }
+
+    function clearActiveSection(active){
+      if(active === 'sem'){
+        document.getElementById('sem-numero').value = "";
+        document.getElementById('sem-motivo').value = "";
+        document.querySelectorAll('input[name^="sem-q"]').forEach(r=> r.checked = false);
+      }else{
+        document.getElementById('com-numero').value = "";
+        document.getElementById('com-motivo').value = "";
+        document.querySelectorAll('input[name^="com-q"]').forEach(r=> r.checked = false);
+      }
+      showToast("Formulário limpo.");
+    }
+
+    // Controle (um de cada vez)
+    let ACTIVE = 'sem'; // padrão
+    function updateView(){
+      const secSem = document.getElementById('secSem');
+      const secCom = document.getElementById('secCom');
+      const btnSem = document.getElementById('btnSemOnus');
+      const btnCom = document.getElementById('btnComOnus');
+      const chip   = document.getElementById('chipTipo');
+      const copyBtn= document.getElementById('copyActive');
+      const clearBtn= document.getElementById('clearActive');
+
+      if(ACTIVE === 'sem'){
+        secSem.classList.remove('hidden'); secCom.classList.add('hidden');
+        btnSem.classList.add('active'); btnSem.setAttribute('aria-pressed','true');
+        btnCom.classList.remove('active'); btnCom.setAttribute('aria-pressed','false');
+        chip.innerHTML = `Tipo selecionado: <span class="text-yellow-700">Sem Ônus</span>`;
+        copyBtn.innerHTML = `${COPY_ICON}<span class="label">${copyLabel('sem')}</span>`;
+        clearBtn.textContent = "Limpar (Sem Ônus)";
+      }else{
+        secCom.classList.remove('hidden'); secSem.classList.add('hidden');
+        btnCom.classList.add('active'); btnCom.setAttribute('aria-pressed','true');
+        btnSem.classList.remove('active'); btnSem.setAttribute('aria-pressed','false');
+        chip.innerHTML = `Tipo selecionado: <span class="text-red-700">Com Ônus</span>`;
+        copyBtn.innerHTML = `${COPY_ICON}<span class="label">${copyLabel('com')}</span>`;
+        clearBtn.textContent = "Limpar (Com Ônus)";
+      }
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', ()=>{
+      renderQuestions();
+      document.getElementById('btnSemOnus').addEventListener('click', ()=>{ ACTIVE='sem'; updateView(); });
+      document.getElementById('btnComOnus').addEventListener('click', ()=>{ ACTIVE='com'; updateView(); });
+      document.getElementById('copyActive').addEventListener('click', ()=> copyActiveSection(ACTIVE));
+      document.getElementById('clearActive').addEventListener('click', ()=> clearActiveSection(ACTIVE));
+      updateView();
+    });
+  </script>
+</body>
+</html>
