@@ -4,6 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Portal do Diligenciador</title>
+
+  <!-- FAVICON embutido (círculo verde + check amarelo) -->
+  <link rel="icon" type="image/svg+xml"
+    href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="%23006341"/><path d="M23 33l6 6 12-14" stroke="%23FFD200" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'>
+  <!-- Pinned tab (Safari) opcional -->
+  <link rel="mask-icon"
+    href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="black"/><path d="M23 33l6 6 12-14" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+    color="#006341">
+  <!-- Apple Touch (iOS) — usa o mesmo SVG como fallback sem precisar de arquivo -->
+  <link rel="apple-touch-icon"
+    href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" ry="14" fill="%23006341"/><path d="M23 33l6 6 12-14" stroke="%23FFD200" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'>
+  <meta name="theme-color" content="#006341">
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -81,7 +94,7 @@
     /* ---------- Header & tokens for dashboard palette ---------- */
     .header{backdrop-filter:saturate(140%) blur(10px); background:rgba(255,255,255,.75); border-bottom:1px solid rgba(16,24,40,.08)}
 
-    /* ---------- Dark Mode — improved contrast & harmony with background ---------- */
+    /* ---------- Dark Mode ---------- */
     .dark-mode{color:#e8edf5}
     .dark-mode .header{background:rgba(10,25,41,.55); border-color:rgba(255,255,255,.08)}
     .dark-mode .card{background:rgba(20,28,48,.68); border-color:rgba(88,114,160,.35)}
@@ -90,8 +103,6 @@
     .dark-mode .icon-container{background-color:rgba(56,178,149,.12)!important}
     .dark-mode a.button-dark, .dark-mode button.button-dark{background:#006341!important; color:#fff!important}
     .dark-mode a.button-yellow{background:#FFD200!important; color:#222!important}
-
-    /* Ensure default Tailwind text utilities look good on dark */
     .dark-mode .text-slate-700\/90{color:#cfd8e6!important}
 
     /* ---------- Notification ---------- */
@@ -107,11 +118,9 @@
     }
   
     /* ===== Ajustes pedidos ===== */
-    /* 1) Texto dos parágrafos mais escuro no modo claro */
-    #main-dashboard .card p{ color:#0f172a; } /* slate-900 */
+    #main-dashboard .card p{ color:#0f172a; }
     .dark-mode #main-dashboard .card p{ color:#cfd8e6; }
 
-    /* 2) Fundo claro com gradiente suave (apenas no modo claro do painel) */
     .dashboard-light-bg{position:fixed; inset:0; z-index:-1; pointer-events:none; background:
         linear-gradient(180deg,#ffffff 0%, #ffffff 100%),
         radial-gradient(900px 600px at 12% 8%, rgba(0,99,65,.06), transparent 60%),
@@ -119,8 +128,6 @@
         radial-gradient(1100px 720px at 50% 120%, rgba(0,99,65,.05), transparent 60%);
     }
     .dark-mode .dashboard-light-bg{display:none}
-  
-    /* Light background embellishments (subtle, professional) */
     .dashboard-light-bg::before{content:""; position:absolute; inset:-12%;
       background:
         radial-gradient(520px 340px at 22% 28%, rgba(0,99,65,.09), transparent 55%),
@@ -141,8 +148,6 @@
     }
     @keyframes floatGlow{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(0,-8px,0) scale(1.02)}100%{transform:translate3d(0,-12px,0) scale(1.03)}}
 
-  
-    /* ===== Opção para desativar a animação do glow no claro ===== */
     .no-glow .dashboard-light-bg::before{animation:none; opacity:.35}
 
     /* ===== Rodapé ===== */
@@ -154,14 +159,13 @@
     .dark-mode .site-footer{color:#cbd5e1; border-top-color: rgba(255,255,255,.12)}
     .dark-mode .site-footer a{color:#FFD200}
   
-    /* ===== Focus Mode (modo leitura limpa) ===== */
+    /* ===== Focus Mode ===== */
     body.focus-mode{ background:#ffffff !important; color:#0f172a; }
     body.focus-mode .dashboard-light-bg, body.focus-mode .app-bg{ display:none !important; }
     body.focus-mode .header{ background:#ffffff !important; border-color:rgba(2,6,23,.08) !important; }
     body.focus-mode .card{ background:#ffffff !important; border-color:rgba(2,6,23,.10) !important; box-shadow:0 6px 20px rgba(2,6,23,.06) !important; }
     body.focus-mode .card::after{ display:none !important; }
     body.focus-mode .icon-container{ background-color:rgba(0,99,65,.08)!important; }
-    /* Dark focus variant */
     body.dark-mode.focus-mode{ background:#0b1220 !important; color:#e8edf5; }
     body.dark-mode.focus-mode .header{ background:#111a2e !important; border-color:rgba(255,255,255,.1)!important; }
     body.dark-mode.focus-mode .card{ background:#141e34 !important; border-color:rgba(255,255,255,.12)!important; box-shadow:0 6px 20px rgba(0,0,0,.35)!important; }
@@ -319,7 +323,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFD200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M13 17V9"/><path d="M18 17V5"/><path d="M8 17v-3"/></svg>
             </div>
             <h3 class="text-xl font-semibold mb-2">Calcule seu índice</h3>
-            <p class="mb-4 text-slate-700/90 dark:text-petrobras-textDark">Ferramenta para cálculo de índice personalizado (configurável por regra de negócio).</p>
+            <p class="mb-4 text-slate-700/90 dark:text-petrobras-textDark">Veja aqui seu indice com base no eDilig.</p>
             <a href="indice.html" class="inline-flex items-center bg-petrobras-yellow hover:bg-petrobras-lightYellow text-gray-800 font-medium py-2 px-4 rounded-lg transition-all">
               <span>Calcular índice</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -390,5 +394,3 @@
   <!-- (removido) reinstalação do antigo botão de glow -->
 </body>
 </html>
-
-
