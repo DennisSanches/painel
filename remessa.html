@@ -71,6 +71,55 @@
         .site-footer{padding:24px 16px; color:#475569; border-top:1px solid rgba(2,6,23,.08); background:transparent}
         .site-footer .inner{max-width:1200px; margin:0 auto; display:flex; justify-content:center; gap:.5rem}
         .site-footer strong{font-weight:700}
+
+        /* =========================
+           AJUSTES PARA NOTEBOOKS
+           ========================= */
+        /* Reduz tudo quando a altura útil é baixa (ex.: 1366×768) */
+        @media (max-height: 800px) {
+          .screen { padding: 16px !important; }
+          .app-container main { padding-top: 0 !important; }
+          .card { padding: 18px !important; }
+          .card .p-8 { padding: 18px !important; }
+          .card .p-6 { padding: 16px !important; }
+          .progress-bar { height: 5px; }
+          .site-footer { padding: 16px 12px; }
+
+          /* Tipografia e ícones um passo menores */
+          h1 { font-size: 1.75rem !important; }     /* ~text-2xl/3xl */
+          h2 { font-size: 1.25rem !important; }     /* ~text-xl */
+          .text-lg { font-size: 1rem !important; }
+          .text-2xl { font-size: 1.25rem !important; }
+          .w-28.h-28 { width: 72px !important; height: 72px !important; }
+          .w-10.h-10 { width: 36px !important; height: 36px !important; }
+
+          /* Botões mais compactos */
+          .btn-primary, .btn-secondary {
+            padding: 10px 14px !important;
+            border-radius: 10px !important;
+          }
+          #start-btn { padding: 12px 20px !important; font-size: 1rem !important; }
+
+          /* Tira elementos puramente decorativos para ganhar altura */
+          .welcome-decor { display: none !important; }
+
+          /* Menos espaçamento geral */
+          .mb-10 { margin-bottom: 20px !important; }
+          .mb-8 { margin-bottom: 16px !important; }
+          .mb-6 { margin-bottom: 14px !important; }
+          .gap-6 { gap: 16px !important; }
+        }
+
+        /* Ajustes suaves para larguras de até 1440px */
+        @media (max-width: 1440px) {
+          .max-w-5xl { max-width: 1000px; }
+          .grid { gap: 16px; }
+          .card { padding: 20px; }
+          .text-4xl { font-size: 2rem; } /* título de boas-vindas */
+        }
+
+        /* Evita que cada tela force rolagem vertical desnecessária */
+        .min-h-screen { min-height: calc(100vh - 64px); } /* reserva espaço do footer e respiros */
     </style>
 </head>
 <body class="bg-pattern">
@@ -78,7 +127,7 @@
         <main>
             <!-- Welcome Screen -->
             <div id="welcome-screen" class="screen visible-screen min-h-screen flex flex-col items-center justify-center p-6">
-                <!-- NOVO: Botão Voltar para o Painel -->
+                <!-- Botão Voltar para o Painel -->
                 <div class="absolute top-6 left-6">
                     <a href="index.html" class="btn-secondary btn-scale text-gray-600 font-medium py-2.5 px-4 rounded-lg flex items-center hover:bg-gray-100 transition-colors">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,8 +139,8 @@
 
                 <div class="text-center max-w-md mx-auto fade-in">
                     <div class="mb-8 relative">
-                        <div class="absolute -top-10 -right-10 w-20 h-20 bg-yellow-300 rounded-full opacity-30 pulse"></div>
-                        <div class="absolute -bottom-5 -left-5 w-16 h-16 bg-green-300 rounded-full opacity-30 pulse"></div>
+                        <div class="absolute -top-10 -right-10 w-20 h-20 bg-yellow-300 rounded-full opacity-30 pulse welcome-decor"></div>
+                        <div class="absolute -bottom-5 -left-5 w-16 h-16 bg-green-300 rounded-full opacity-30 pulse welcome-decor"></div>
                         <svg class="w-28 h-28 mx-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="50" cy="50" r="45" fill="url(#gradient)" />
                             <path d="M30 50L45 65L70 35" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
@@ -117,7 +166,6 @@
             <!-- First Step Screen -->
             <div id="first-step-screen" class="screen hidden-screen min-h-screen p-6">
                 <div class="max-w-lg mx-auto">
-                    <!-- já havia botão voltar -->
                     <div class="flex justify-start mb-6">
                         <a href="index.html" class="btn-secondary btn-scale text-gray-600 font-medium py-3 px-6 rounded-lg flex items-center hover:bg-gray-100 transition-colors">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +181,7 @@
                     <div class="mb-4">
                         <div class="progress-bar w-1/2"></div>
                     </div>
-                    <div class="card bg-white rounded-xl p-8 mb-6">
+                    <div class="card bg-white rounded-xl p-8">
                         <div class="mb-6">
                             <label for="request-date" class="block text-gray-700 font-medium mb-2">
                                 <div class="flex items-center">
@@ -164,7 +212,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between mt-4">
                         <button id="back-to-welcome" class="btn-secondary btn-scale text-gray-600 font-medium py-3 px-6 rounded-lg flex items-center hover:bg-gray-100 transition-colors">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -184,7 +232,6 @@
             <!-- Second Step Screen -->
             <div id="second-step-screen" class="screen hidden-screen min-h-screen p-6">
                 <div class="max-w-5xl mx-auto">
-                    <!-- já havia botão voltar -->
                     <div class="flex justify-start mb-6">
                         <a href="index.html" class="btn-secondary btn-scale text-gray-600 font-medium py-3 px-6 rounded-lg flex items-center hover:bg-gray-100 transition-colors">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,7 +241,6 @@
                         </a>
                     </div>
 
-                    <!-- Grid com duas janelas de cálculo -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- JANELA 1 -->
                         <div class="card bg-white rounded-xl p-8">
@@ -304,7 +350,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Elements principais
             const welcomeScreen = document.getElementById('welcome-screen');
             const firstStepScreen = document.getElementById('first-step-screen');
             const secondStepScreen = document.getElementById('second-step-screen');
@@ -314,7 +359,6 @@
             const backToFirstBtn = document.getElementById('back-to-first');
             const restartBtn = document.getElementById('restart-btn');
 
-            // Campos janela 1 (impacto)
             const requestDateInput = document.getElementById('request-date');
             const reviewDateInput = document.getElementById('review-date');
             const impactDaysDisplay = document.getElementById('impact-days');
@@ -324,21 +368,18 @@
             const successIcon = document.getElementById('success-icon');
             const resultContainer = document.getElementById('result-container');
 
-            // Campos janela 2 (somar dias)
             const baseDateInput = document.getElementById('base-date');
             const daysToAddInput = document.getElementById('days-to-add');
             const addedDateResult = document.getElementById('added-date-result');
             const successIconAdd = document.getElementById('success-icon-add');
             const resultContainerAdd = document.getElementById('result-container-add');
 
-            // Animação sutil dos botões
             document.querySelectorAll('button').forEach(button => {
                 button.addEventListener('mousedown', function() { this.style.transform = 'scale(0.95)'; });
                 button.addEventListener('mouseup', function() { this.style.transform = ''; });
                 button.addEventListener('mouseleave', function() { this.style.transform = ''; });
             });
 
-            // Datas de exemplo
             function setExampleDates() {
                 requestDateInput.value = '2025-07-01';
                 reviewDateInput.value = '2025-07-04';
@@ -349,7 +390,6 @@
                 calculateAddDays();
             }
 
-            // Navegação com animações
             function showScreen(screenToShow, screenToHide) {
                 screenToHide.classList.remove('visible-screen');
                 screenToHide.classList.add('hidden-screen');
@@ -359,7 +399,6 @@
                 }, 300);
             }
 
-            // Eventos de navegação
             startBtn.addEventListener('click', () => {
                 showScreen(firstStepScreen, welcomeScreen);
                 setExampleDates();
@@ -396,7 +435,6 @@
                 showScreen(welcomeScreen, secondStepScreen);
             });
 
-            // ===== Cálculo 1: Dias de impacto =====
             function calculateImpactDays() {
                 const requestDate = new Date(requestDateInput.value);
                 const reviewDate = new Date(reviewDateInput.value);
@@ -432,7 +470,6 @@
                 setTimeout(() => { resultContainer.classList.remove('pulse'); }, 2000);
             }
 
-            // ===== Cálculo 2: Somar dias à data =====
             function calculateAddDays() {
                 const baseDate = new Date(baseDateInput.value);
                 const days = parseInt(daysToAddInput.value) || 0;
@@ -449,7 +486,6 @@
                 setTimeout(() => { resultContainerAdd.classList.remove('pulse'); }, 2000);
             }
 
-            // Listeners de cálculo
             requestDateInput.addEventListener('change', calculateImpactDays);
             reviewDateInput.addEventListener('change', calculateImpactDays);
             shippingDateInput.addEventListener('change', calculateNewShippingDate);
@@ -458,7 +494,6 @@
             baseDateInput.addEventListener('change', calculateAddDays);
             daysToAddInput.addEventListener('input', calculateAddDays);
 
-            // Ajuste para exemplo específico
             function handleExampleDates() {
                 if (requestDateInput.value === '2025-07-01' &&
                     reviewDateInput.value === '2025-07-04' &&
