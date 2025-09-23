@@ -83,6 +83,51 @@
     .site-footer{padding:24px 16px; color:#475569; border-top:1px solid rgba(2,6,23,.08); background:transparent}
     .site-footer .inner{max-width:1200px; margin:0 auto; display:flex; justify-content:center; gap:.5rem}
     .site-footer strong{font-weight:700}
+
+    /* ========= AJUSTES PARA NOTEBOOKS ========= */
+
+    /* Evita que cada tela force rolagem vertical desnecessária (reserva ~64px p/ footer) */
+    .min-h-screen { min-height: calc(100vh - 64px); }
+
+    /* Larguras até 1440px: suaviza gaps e paddings */
+    @media (max-width: 1440px) {
+      .max-w-3xl { max-width: 900px; }
+      .grid { gap: 16px; }
+      .card { padding: 20px; }
+      .text-4xl { font-size: 2rem; } /* título da welcome */
+    }
+
+    /* Altura baixa (ex.: 1366×768 e 1280×720): compacta tudo */
+    @media (max-height: 800px) {
+      .screen { padding: 16px !important; }
+      .card { padding: 18px !important; }
+      .mb-10 { margin-bottom: 20px !important; }
+      .mb-8 { margin-bottom: 16px !important; }
+      .mb-6 { margin-bottom: 14px !important; }
+      .gap-6 { gap: 14px !important; }
+      .site-footer { padding: 16px 12px; }
+
+      /* Tipografia um passo menor */
+      h1 { font-size: 1.75rem !important; }   /* ~ text-2xl/3xl */
+      h2 { font-size: 1.25rem !important; }   /* ~ text-xl */
+      .text-lg { font-size: 1rem !important; }
+      .text-2xl { font-size: 1.25rem !important; }
+      .text-3xl { font-size: 1.5rem !important; }
+
+      /* Botões mais compactos */
+      .btn-primary, .btn-secondary { padding: 10px 14px !important; border-radius: 10px !important; }
+      #start-btn { padding: 12px 20px !important; font-size: 1rem !important; }
+
+      /* Gauge um pouco menor */
+      .gauge-wrap svg { width: 150px !important; height: 150px !important; }
+    }
+
+    /* Altura muito baixa (≤720px): mais compacto e 1 coluna no grid para respiro vertical */
+    @media (max-height: 720px) {
+      .grid { gap: 12px !important; }
+      .gauge-wrap svg { width: 140px !important; height: 140px !important; }
+      #calc-screen .grid { grid-template-columns: 1fr !important; } /* força 1 coluna */
+    }
   </style>
 </head>
 <body class="bg-pattern">
@@ -178,7 +223,7 @@
 
               <div class="grid grid-cols-1 md:grid-cols-1 gap-6 items-center">
                 <!-- Gauge -->
-                <div class="flex items-center justify-center">
+                <div class="flex items-center justify-center gauge-wrap">
                   <svg width="180" height="180" viewBox="0 0 120 120" class="meter">
                     <defs>
                       <linearGradient id="gradGauge" x1="0" y1="0" x2="1" y2="1">
@@ -219,7 +264,7 @@
                 </div>
               </div>
             </div>
-          </div> <!-- /Resultado -->
+          </div> <!-- /grid -->
         </div>
       </div>
     </main>
@@ -340,7 +385,7 @@
         totalsOut.textContent = total.toLocaleString('pt-BR');
         lateOut.textContent = late.toLocaleString('pt-BR');
 
-        /* === NOVAS FAIXAS ===
+        /* === FAIXAS ===
            > 20%    => Alto
            15–20%   => Atenção
            ≤ 15%    => Bom
